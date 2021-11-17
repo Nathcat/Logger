@@ -5,16 +5,26 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Advertisements;
 using UnityEngine.UI;
 using System.IO;
+using UnityEngine.Networking;
+
+/*
+ * UI/MainMenuController.cs
+ *
+ * @author Nathan "Nathcat" Baines
+ */
 
 public class MainMenuController : MonoBehaviour
 {
     public GameObject startMenu;
     public GameObject gemsText;
+    public GameObject leaderboardText;
     public GameObject shopMenu;
 
     void Start() {
       Screen.orientation = ScreenOrientation.Portrait;
       shopMenu.SetActive(false);
+
+      StartCoroutine(getLeaderboard());
 
       try {
         read(Path.Combine(Application.persistentDataPath, "noads.txt"));
@@ -44,9 +54,23 @@ public class MainMenuController : MonoBehaviour
       shopMenu.SetActive(true);
     }
 
-    public void onBackToMenuButton() {
+    public void onBackToMenuButton(GameObject openMenu) {
       startMenu.SetActive(true);
-      shopMenu.SetActive(false);
+      openMenu.SetActive(false);
+    }
+
+    IEnumerator getLeaderboard() {
+      UnityWebRequest www = UnityWebRequest.Get("http://nathcat.cloudns.cl/get");
+      yield return www.SendWebRequest();
+
+      if (www.error == null) {
+        string leaderboard = JsonUtility.FromJson<Leaderboard>(www.downloadHandler.text).message;
+        leaderboardText.GetComponent<Text>().text = "-----Leaderboard-----\n" + leaderboard;
+
+      } else {
+        Debug.LogError(www.error);
+        leaderboardText.GetComponent<Text>().text = "-----Leaderboard-----\nFailed to get the leaderboard :(";
+      }
     }
 
     string read(string path) {
@@ -61,4 +85,8 @@ public class MainMenuController : MonoBehaviour
       writer.WriteLine(content);
       writer.Close();
     }
+}
+
+public class Leaderboard {
+  public string message;
 }

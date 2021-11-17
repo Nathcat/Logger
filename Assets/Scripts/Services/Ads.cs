@@ -5,6 +5,12 @@ using UnityEngine.Advertisements;
 using UnityEngine.SceneManagement;
 using System.IO;
 
+/*
+ * Services/Ads.cs
+ *
+ * @author Nathan "Nathcat" Baines
+ */
+
 public class Ads : MonoBehaviour, IUnityAdsListener
 {
   private string gameId = "4434885";

@@ -4,6 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.IO;
+using UnityEngine.Networking;
+
+/*
+ * UI/GameUIController.cs
+ *
+ * @author Nathan "Nathcat" Baines
+ */
 
 public class GameUIController : MonoBehaviour
 {
@@ -13,6 +20,7 @@ public class GameUIController : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject countdownText;
     public GameObject diedMenu;
+    public Text usernameEntry;
     public bool paused = false;
     private bool countingDown = true;
     private int resetScore = 0;
@@ -87,6 +95,23 @@ public class GameUIController : MonoBehaviour
 
       } else {
         playerController.gemsCollectedText.GetComponent<Text>().text = "You don't have enough gems!";
+      }
+    }
+
+    public void SubmitScoreButtonClicked() {
+      StartCoroutine(SubmitScore());
+    }
+
+    IEnumerator SubmitScore() {
+      UnityWebRequest www = UnityWebRequest.Get("http://nathcat.cloudns.cl/add/" + usernameEntry.text + "/" + playerController.score);
+      yield return www.SendWebRequest();
+
+      if (www.error == null) {
+        playerController.gemsCollectedText.GetComponent<Text>().text = "Score submitted!";
+        
+      } else {
+        Debug.LogError(www.error);
+        playerController.gemsCollectedText.GetComponent<Text>().text = "Something went wrong :(";
       }
     }
 

@@ -6,6 +6,12 @@ using System;
 using System.IO;
 using UnityEngine.UI;
 
+/*
+ * Services/Purchaser.cs
+ *
+ * @author Nathan "Nathcat" Baines
+ */
+
 public class Purchaser : MonoBehaviour, IStoreListener
 {
   private static IStoreController storeController;

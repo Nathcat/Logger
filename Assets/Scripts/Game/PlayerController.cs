@@ -4,20 +4,26 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 
+/*
+ * Game/PlayerControllers.cs
+ *
+ * @author Nathan "Nathcat" Baines
+ */
+
 public class PlayerController : MonoBehaviour
 {
-    public Vector3 rightSide;
-    public Vector3 leftSide;
+    public Vector3 rightSide;  // Right side of the tree
+    public Vector3 leftSide;  // Left side of the tree
     private SpriteRenderer renderer;
     private GameManager gameManager;
     private GameUIController uiController;
-    public bool allowMove = true;
+    public bool allowMove = true;  // Should the player be allowed to move
     public int score = 0;
-    public ParticleSystem treeCutParticles;
-    public ParticleSystem gemParticles;
-    private int gemsCollected = 0;
+    public ParticleSystem treeCutParticles;  // Particle system which is played when a tree piece is cut
+    public ParticleSystem gemParticles;  // Particle system which is played when a gem is collected
+    private int gemsCollected = 0;  // The number of gems collected by the player
     public GameObject gemsCollectedText;
-    public AudioSource cutAudio;
+    public AudioSource cutAudio;  // The AudioSource which is played when the player cuts a part of the tree
 
     void Start() {
       renderer = gameObject.GetComponent<SpriteRenderer>();

@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Game/TreeTrunk.cs
+ *
+ * @author Nathan "Nathcat" Baines
+ */
+
 public class TreeTrunk : MonoBehaviour
 {
     private GameManager gameManager;

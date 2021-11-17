@@ -2,16 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Game/GameManager.cs
+ *
+ * @author Nathan "Nathcat" Baines
+ */
+
 public class GameManager : MonoBehaviour
 {
-    public GameObject[] treePrefabs;
-    public GameObject coin;
-    public GameObject gem;
-    public float treeMoveSpeed = 10f;
-    public int numberOfTrees = 100;
+    public GameObject[] treePrefabs;  // List of all prefabs of tree parts
+    public GameObject coin;  // Coin prefab
+    public GameObject gem;  // Gem prefab
+    public float treeMoveSpeed = 10f;  // Defines the rate at which the tree should move
+    public int numberOfTrees = 100;  // The number of trees spawned per section
     public float originalTreeMoveSpeed;
-    public int treesPassed = 0;
-    private int lastIndex;
+    public int treesPassed = 0;  // The number of trees the player has passed
+    private int lastIndex;  // Index of the last tree prefab spawned
 
     void Start() {
       originalTreeMoveSpeed = treeMoveSpeed;
