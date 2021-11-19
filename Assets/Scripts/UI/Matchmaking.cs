@@ -100,10 +100,11 @@ public class Matchmaking : MonoBehaviour
 
       if (www.error == null && inLobby) {
         lobbyState = JsonUtility.FromJson<LobbyState>(www.downloadHandler.text);
-        text.GetComponent<Text>().text = (10 - int.Parse(lobbyState.playersRemaining)) + " players needed to start the game.";
+        text.GetComponent<Text>().text = (5 - int.Parse(lobbyState.playersRemaining)) + " players needed to start the game.";
 
         if (lobbyState.playing == "yes") {
-          // TODO If the lobby is playing
+          PlayerPrefs.SetString("lobbyId", lobbyId);
+          SceneManager.LoadScene("Multiplayer");
         }
 
       } else {
@@ -126,6 +127,10 @@ public class Matchmaking : MonoBehaviour
     }
 
     public void BackToMainMenu() {
+      if (inLobby) {
+        LeaveGame();
+      }
+      
       SceneManager.LoadScene("MainMenu");
     }
 }

@@ -76,7 +76,12 @@ public class GameManager : MonoBehaviour
       float y = 7;
 
       while (treesSpawned <= numberOfTrees) {
-        Instantiate(randomTree(new Vector3(0f, y, 0f)), new Vector3(0f, y, 0f), new Quaternion());
+        Quaternion rotation = new Quaternion();
+        if (Random.Range(0, 2) == 1) {
+          rotation = new Quaternion(0f, 180f, 0f, 0f);
+        }
+
+        Instantiate(randomTree(new Vector3(0f, y, 0f)), new Vector3(0f, y, 0f), rotation);
         y += 1.375f;
         treesSpawned++;
       }

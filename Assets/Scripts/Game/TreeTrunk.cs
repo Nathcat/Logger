@@ -11,23 +11,31 @@ using UnityEngine;
 public class TreeTrunk : MonoBehaviour
 {
     private GameManager gameManager;
+    private MultiplayerGameManager multiplayerGameManager;
     private Rigidbody2D rb;
 
     void Start() {
       gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+      multiplayerGameManager = GameObject.Find("GameManager").GetComponent<MultiplayerGameManager>();
       rb = gameObject.GetComponent<Rigidbody2D>();
-
-      if (Random.Range(0, 2) == 1) {
-        transform.rotation = new Quaternion(0f, 180f, 0f, 0f);
-      }
     }
 
     void Update() {
-      rb.velocity = Vector3.down * gameManager.treeMoveSpeed;
+      try {
+        rb.velocity = Vector3.down * gameManager.treeMoveSpeed;
 
-      if (transform.position.y <= -10f) {
-        gameManager.treesPassed++;
-        Destroy(gameObject);
+        if (transform.position.y <= -10f) {
+          gameManager.treesPassed++;
+          Destroy(gameObject);
+        }
+
+      } catch (System.Exception e) {
+        rb.velocity = Vector3.down * multiplayerGameManager.treeMoveSpeed;
+
+        if (transform.position.y <= -10f) {
+          multiplayerGameManager.treesPassed++;
+          Destroy(gameObject);
+        }
       }
     }
 }

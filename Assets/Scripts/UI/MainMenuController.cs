@@ -19,10 +19,12 @@ public class MainMenuController : MonoBehaviour
     public GameObject gemsText;
     public GameObject leaderboardText;
     public GameObject shopMenu;
+    public GameObject gameModeMenu;
 
     void Start() {
       Screen.orientation = ScreenOrientation.Portrait;
       shopMenu.SetActive(false);
+      gameModeMenu.SetActive(false);
 
       StartCoroutine(getLeaderboard());
 
@@ -44,7 +46,7 @@ public class MainMenuController : MonoBehaviour
       }
     }
 
-    public void onPlayButtonClicked() {
+    public void onSinglePlayerButtonClicked() {
       PlayerPrefs.SetString("NextScene", "Game");
       SceneManager.LoadScene("Ads");
     }
@@ -59,8 +61,18 @@ public class MainMenuController : MonoBehaviour
       openMenu.SetActive(false);
     }
 
+    public void gameModeMenuButtonClicked() {
+      gameModeMenu.SetActive(true);
+      startMenu.SetActive(false);
+    }
+
+    public void onMultiplayerButtonClicked() {
+      PlayerPrefs.SetString("NextScene", "Matchmaking");
+      SceneManager.LoadScene("Ads");
+    }
+
     IEnumerator getLeaderboard() {
-      UnityWebRequest www = UnityWebRequest.Get("http://nathcat.cloudns.cl/get");
+      UnityWebRequest www = UnityWebRequest.Get("http://nathcat.cloudns.cl:5000/get");
       yield return www.SendWebRequest();
 
       if (www.error == null) {
