@@ -14,4 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Ads.unity
     guid: 9114a7f7c25c5483caef5c47b932945b
+  - enabled: 1
+    path: Assets/Scenes/Matchmaking.unity
+    guid: 6d550404b18e44a5c9431c35faba7e49
+  - enabled: 1
+    path: Assets/Scenes/Multiplayer.unity
+    guid: 201690175f3574af7972f26acfc80d9f
   m_configObjects: {}

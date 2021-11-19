@@ -33,6 +33,8 @@ public class GameUIController : MonoBehaviour
     }
 
     void Update() {
+      playerController.paused = paused;
+      
       if (countingDown) {
         gameManager.treeMoveSpeed = 0f;
         playerController.score = resetScore;
@@ -108,7 +110,7 @@ public class GameUIController : MonoBehaviour
 
       if (www.error == null) {
         playerController.gemsCollectedText.GetComponent<Text>().text = "Score submitted!";
-        
+
       } else {
         Debug.LogError(www.error);
         playerController.gemsCollectedText.GetComponent<Text>().text = "Something went wrong :(";

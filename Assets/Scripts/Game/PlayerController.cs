@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     public Vector3 leftSide;  // Left side of the tree
     private SpriteRenderer renderer;
     private GameManager gameManager;
-    private GameUIController uiController;
+    private MultiplayerGameManager multiGameManager;
     public bool allowMove = true;  // Should the player be allowed to move
     public int score = 0;
     public ParticleSystem treeCutParticles;  // Particle system which is played when a tree piece is cut
@@ -24,23 +24,24 @@ public class PlayerController : MonoBehaviour
     private int gemsCollected = 0;  // The number of gems collected by the player
     public GameObject gemsCollectedText;
     public AudioSource cutAudio;  // The AudioSource which is played when the player cuts a part of the tree
+    public bool paused = false;
 
     void Start() {
       renderer = gameObject.GetComponent<SpriteRenderer>();
       gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-      uiController = GameObject.Find("Canvas").GetComponent<GameUIController>();
+      multiGameManager = GameObject.Find("GameManager").GetComponent<MultiplayerGameManager>();
       cutAudio = GameObject.Find("CutAudioClip").GetComponent<AudioSource>();
       StartCoroutine(scoreTimer());
     }
 
     void Update() {
       // PC/Mac/Editor controls
-      if (Input.GetKeyDown(KeyCode.RightArrow) && transform.position != rightSide && allowMove && !uiController.paused) {
+      if (Input.GetKeyDown(KeyCode.RightArrow) && transform.position != rightSide && allowMove && !paused) {
         transform.position = rightSide;
         renderer.flipX = true;
         cutTree();
 
-      } else if (Input.GetKeyDown(KeyCode.LeftArrow) && transform.position != leftSide && allowMove && !uiController.paused) {
+      } else if (Input.GetKeyDown(KeyCode.LeftArrow) && transform.position != leftSide && allowMove && !paused) {
         transform.position = leftSide;
         renderer.flipX = false;
         cutTree();
@@ -50,12 +51,12 @@ public class PlayerController : MonoBehaviour
       if (Input.touchCount > 0) {
         Touch touch = Input.GetTouch(0);
 
-        if (touch.position.x > Screen.width / 2 && transform.position != rightSide && allowMove && !uiController.paused) {
+        if (touch.position.x > Screen.width / 2 && transform.position != rightSide && allowMove && !paused) {
           transform.position = rightSide;
           renderer.flipX = true;
           cutTree();
 
-        } else if (touch.position.x < Screen.width / 2 && transform.position != leftSide && allowMove && !uiController.paused) {
+        } else if (touch.position.x < Screen.width / 2 && transform.position != leftSide && allowMove && !paused) {
           transform.position = leftSide;
           renderer.flipX = false;
           cutTree();
@@ -75,7 +76,12 @@ public class PlayerController : MonoBehaviour
         Destroy(other.transform.gameObject);
 
       } else {
-        gameManager.treeMoveSpeed = 0f;
+        if (gameManager == null) {
+          multiGameManager.treeMoveSpeed = 0f;
+        } else {
+          gameManager.treeMoveSpeed = 0f;
+        }
+        
         allowMove = false;
 
         gemsCollectedText.GetComponent<Text>().text = $"You collected {gemsCollected} gems, you now have {int.Parse(read(Path.Combine(Application.persistentDataPath, "number_of_gems.txt"))) + gemsCollected}";
