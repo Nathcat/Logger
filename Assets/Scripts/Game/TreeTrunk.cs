@@ -21,7 +21,7 @@ public class TreeTrunk : MonoBehaviour
     }
 
     void Update() {
-      try {
+      if (gameManager != null) {
         rb.velocity = Vector3.down * gameManager.treeMoveSpeed;
 
         if (transform.position.y <= -10f) {
@@ -29,7 +29,7 @@ public class TreeTrunk : MonoBehaviour
           Destroy(gameObject);
         }
 
-      } catch (System.Exception e) {
+      } else {
         rb.velocity = Vector3.down * multiplayerGameManager.treeMoveSpeed;
 
         if (transform.position.y <= -10f) {

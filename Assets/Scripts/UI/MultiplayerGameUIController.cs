@@ -25,6 +25,7 @@ public class MultiplayerGameUIController : MonoBehaviour
   public GameObject countdownText;
   private LobbyState lobbyState;
   public bool paused = false;
+  public GameObject scoreText;
 
   void Start() {
     lobbyId = PlayerPrefs.GetString("lobbyId");
@@ -38,6 +39,8 @@ public class MultiplayerGameUIController : MonoBehaviour
   }
 
   void Update() {
+    scoreText.GetComponent<Text>().text = "" + playerController.score;
+
     playerController.paused = paused;
 
     if (countingDown) {
@@ -54,9 +57,8 @@ public class MultiplayerGameUIController : MonoBehaviour
 
       if (lastAllowMove == true) {
         StartCoroutine(LeaveLobby());
+        StartCoroutine(GetLobbyState());
       }
-
-      StartCoroutine(GetLobbyState());
     }
 
     lastAllowMove = playerController.allowMove;
@@ -100,6 +102,9 @@ public class MultiplayerGameUIController : MonoBehaviour
       }
 
       playerController.gemsCollectedText.GetComponent<Text>().text = "You came " + lobbyState.playersRemaining + suffix;
+      if (playerController.gemsCollectedText.GetComponent<Text>().text == "You came 1st") {
+        playerController.gemsCollectedText.GetComponent<Text>().text += " and won 15 gems!";
+      }
 
     } catch (System.Exception e) {
       Debug.LogError(e.ToString());

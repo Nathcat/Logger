@@ -31,11 +31,29 @@ public class MultiplayerGameManager : MonoBehaviour
   }
 
   void Update() {
+    if (Physics2D.OverlapBox(new Vector2(0f, 7f), new Vector2(0.5f, 0.5f), 0f) == null && tree != null) {
+      BuildTree();
+    }
+
     if (treesPassed == 20) {
       treeMoveSpeed += 1f;
       originalTreeMoveSpeed += 1f;
 
       treesPassed = 0;
+    }
+  }
+
+  void BuildTree() {
+    float y = 7f;
+    for (int x = 0; x < tree.Length - 1; x++) {
+      Quaternion rotation = new Quaternion();
+      if (tree[x + 1] == 1) {
+        rotation = new Quaternion(0f, 180f, 0f, 0f);
+      }
+
+      Instantiate(treePrefabs[tree[x]], new Vector3(0f, y, 0f), rotation);
+      x++;
+      y += 1.375f;
     }
   }
 
@@ -48,17 +66,7 @@ public class MultiplayerGameManager : MonoBehaviour
 
       tree = data.ParseTree();
 
-      float y = 0f;
-      for (int x = 0; x < tree.Length - 1; x++) {
-        Quaternion rotation = new Quaternion();
-        if (tree[x + 1] == 1) {
-          rotation = new Quaternion(0f, 180f, 0f, 0f);
-        }
-
-        Instantiate(treePrefabs[tree[x]], new Vector3(0f, y, 0f), rotation);
-        x++;
-        y += 1.375f;
-      }
+      BuildTree();
 
     } else {
       Debug.LogError(www.error);
@@ -72,6 +80,8 @@ public class Tree {
 
   public int[] ParseTree() {
     string s = tree.Trim(new char[] {'[', ']'});
+
+    s.Replace(", ", ",");
 
     string[] l = s.Split(',');
 

@@ -520,7 +520,7 @@ MonoBehaviour:
   coin: {fileID: 8531672529476973339, guid: 1eb9bbe65f304459489c85a906e61660, type: 3}
   gem: {fileID: 6545435044544014379, guid: 97eb3cf0d7d544db7814646e3b25f0f9, type: 3}
   treeMoveSpeed: 5
-  numberOfTrees: 500
+  numberOfTrees: 30
   originalTreeMoveSpeed: 0
   treesPassed: 0
 --- !u!4 &233723852
@@ -992,8 +992,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 100}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 0, y: 50}
+  m_SizeDelta: {x: 1000, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &529074215
 MonoBehaviour:
@@ -1018,14 +1018,14 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 60
     m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 0
-    m_MaxSize: 200
+    m_BestFit: 1
+    m_MinSize: 50
+    m_MaxSize: 100
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 1
-    m_VerticalOverflow: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
 --- !u!222 &529074216

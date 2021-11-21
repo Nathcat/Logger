@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour
         } else {
           gameManager.treeMoveSpeed = 0f;
         }
-        
+
         allowMove = false;
 
         gemsCollectedText.GetComponent<Text>().text = $"You collected {gemsCollected} gems, you now have {int.Parse(read(Path.Combine(Application.persistentDataPath, "number_of_gems.txt"))) + gemsCollected}";
