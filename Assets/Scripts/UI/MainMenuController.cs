@@ -6,6 +6,7 @@ using UnityEngine.Advertisements;
 using UnityEngine.UI;
 using System.IO;
 using UnityEngine.Networking;
+using System;
 
 /*
  * UI/MainMenuController.cs
@@ -48,7 +49,7 @@ public class MainMenuController : MonoBehaviour
 
     public void onSinglePlayerButtonClicked() {
       PlayerPrefs.SetString("NextScene", "Game");
-      SceneManager.LoadScene("Ads");
+      SceneManager.LoadScene("Game");
     }
 
     public void onShopButtonClicked() {
@@ -72,29 +73,81 @@ public class MainMenuController : MonoBehaviour
     }
 
     IEnumerator getLeaderboard() {
-      UnityWebRequest www = UnityWebRequest.Get("http://nathcat.cloudns.cl:5000/get");
+      string url = "http://logger-leaderboard.nathcat.net/getTop5";
+      
+      UnityWebRequest www = UnityWebRequest.Get(url);
       yield return www.SendWebRequest();
 
-      if (www.error == null) {
-        string leaderboard = JsonUtility.FromJson<Leaderboard>(www.downloadHandler.text).message;
-        leaderboardText.GetComponent<Text>().text = "-----Leaderboard-----\n" + leaderboard;
-
-      } else {
-        Debug.LogError(www.error);
-        leaderboardText.GetComponent<Text>().text = "-----Leaderboard-----\nFailed to get the leaderboard :(";
+      string leaderboard = "";
+      switch (www.result) {
+        case UnityWebRequest.Result.Success:
+          leaderboard = www.downloadHandler.text;
+          break;
+        default:
+          Debug.LogError(www.error);
+          Debug.LogError(www.downloadHandler.text);
+          leaderboard = "An error occurred.";
+          break;
       }
+
+      www.Dispose();
+      leaderboardText.GetComponent<Text>().text = "-----Leaderboard-----\n" + leaderboard;
+      yield break;
     }
 
-    string read(string path) {
+    private string GetLeaderboardFromLocalFile() {
+      string path = Path.Combine(Application.persistentDataPath, "local-leaderboard.txt");
+
+      if (!File.Exists(path)) {
+        write(path, "");
+      }
+
+      string[] content = read(path).Split("\n");
+      if (content[0] == "") return "";
+      
+      PlayerScoreRecord[] record = new PlayerScoreRecord[content.Length-1];
+      for (int i = 0; i < content.Length-1; i++) {
+        string[] row = content[i].Split("\t");
+
+        if (row.Length != 2) continue;
+
+        PlayerScoreRecord r = new PlayerScoreRecord();
+        r.name = row[0];
+        r.score = Int32.Parse(row[1]);
+        record[i] = r;
+      }
+
+      bool emptyPass = false;
+      while (!emptyPass) {
+        emptyPass = true;
+        for (int i = 0; i < record.Length-1; i++) {
+          if (record[i+1].score > record[i].score) {
+            PlayerScoreRecord tmp = record[i];
+            record[i] = record[i+1];
+            record[i+1] = tmp;
+            emptyPass = false;
+          }
+        }
+      }
+
+      string leaderboard = "";
+      for (int i = 0; i < record.Length; i++) {
+        leaderboard += record[i].name + " - " + record[i].score + "\n";
+      }
+
+      return leaderboard;
+    }
+
+    public static string read(string path) {
       StreamReader reader = new StreamReader(path);
       string content = reader.ReadToEnd();
       reader.Close();
       return content;
     }
 
-    void write(string path, string content) {
+    public static void write(string path, string content) {
       StreamWriter writer = new StreamWriter(path);
-      writer.WriteLine(content);
+      writer.Write(content);
       writer.Close();
     }
 }

@@ -5,6 +5,9 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.IO;
 using UnityEngine.Networking;
+using System;
+using System.Data;
+using Mono.Data.Sqlite;
 
 /*
  * UI/GameUIController.cs
@@ -67,7 +70,7 @@ public class GameUIController : MonoBehaviour
 
     public void quitButtonClicked() {
       PlayerPrefs.SetString("NextScene", "MainMenu");
-      SceneManager.LoadScene("Ads");
+      SceneManager.LoadScene("MainMenu");
     }
 
     public void pauseButtonClicked() {
@@ -105,16 +108,30 @@ public class GameUIController : MonoBehaviour
     }
 
     IEnumerator SubmitScore() {
-      UnityWebRequest www = UnityWebRequest.Get("http://nathcat.cloudns.cl/add/" + usernameEntry.text + "/" + playerController.score);
+      string url = "http://logger-leaderboard.nathcat.net/submitScore";
+      UnityWebRequest www = UnityWebRequest.Put(url, "{\"username\": \"" + usernameEntry.text + "\", \"score\": \"" + playerController.score + "\"}");
       yield return www.SendWebRequest();
 
-      if (www.error == null) {
-        playerController.gemsCollectedText.GetComponent<Text>().text = "Score submitted!";
-
-      } else {
-        Debug.LogError(www.error);
-        playerController.gemsCollectedText.GetComponent<Text>().text = "Something went wrong :(";
+      switch (www.result) {
+        case UnityWebRequest.Result.Success:
+          playerController.gemsCollectedText.GetComponent<Text>().text = "Score submitted!";  
+          break;
+        default:
+          Debug.LogError(www.error);
+          Debug.LogError(www.downloadHandler.text);
+          playerController.gemsCollectedText.GetComponent<Text>().text = "An error occurred.";
+          break;
       }
+
+      www.Dispose();
+
+      yield break;
+    }
+
+    private void SubmitScoreLocalFile() {
+      string path = Path.Combine(Application.persistentDataPath, "local-leaderboard.txt");
+      string content = MainMenuController.read(path) + usernameEntry.text + "\t" + playerController.score + "\n";
+      MainMenuController.write(path, content);
     }
 
     IEnumerator doCountdown() {
