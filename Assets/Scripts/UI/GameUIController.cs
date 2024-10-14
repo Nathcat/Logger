@@ -108,7 +108,7 @@ public class GameUIController : MonoBehaviour
     }
 
     IEnumerator SubmitScore() {
-      string url = "http://logger-leaderboard.nathcat.net/submitScore";
+      string url = MainMenuController.leaderboardURL + "/submitScore";
       UnityWebRequest www = UnityWebRequest.Put(url, "{\"username\": \"" + usernameEntry.text + "\", \"score\": \"" + playerController.score + "\"}");
       yield return www.SendWebRequest();
 

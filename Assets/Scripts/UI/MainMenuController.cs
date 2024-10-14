@@ -22,6 +22,8 @@ public class MainMenuController : MonoBehaviour
     public GameObject shopMenu;
     public GameObject gameModeMenu;
 
+    public static string leaderboardURL = "https://logger-leaderboard.nathcat.net";
+
     void Start() {
       Screen.orientation = ScreenOrientation.Portrait;
       shopMenu.SetActive(false);
@@ -73,7 +75,7 @@ public class MainMenuController : MonoBehaviour
     }
 
     IEnumerator getLeaderboard() {
-      string url = "http://logger-leaderboard.nathcat.net/getTop5";
+      string url = leaderboardURL + "/getTop5";
       
       UnityWebRequest www = UnityWebRequest.Get(url);
       yield return www.SendWebRequest();
